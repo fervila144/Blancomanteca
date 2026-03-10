@@ -267,7 +267,7 @@ export default function ProductDetailPage() {
                         </button>
                       </div>
                       
-                      <Button className="flex-1 h-14 text-lg rounded-xl shadow-lg bg-primary hover:bg-primary/90 text-primary-foreground font-bold flex items-center justify-center gap-2" asChild>
+                      <Button className="flex-1 h-14 text-lg rounded-xl shadow-lg bg-accent hover:bg-accent/90 text-accent-foreground font-bold flex items-center justify-center gap-2" asChild>
                         <a href={whatsappUrl} target="_blank" rel="noopener noreferrer">
                           <MessageCircle className="w-6 h-6 text-[#25D366] fill-[#25D366]" />
                           <span>Consultar por WhatsApp</span>
