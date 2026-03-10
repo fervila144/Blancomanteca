@@ -1,0 +1,103 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 40 11% 94%; /* #F2F1EF Creamy Off-White */
+    --foreground: 26 8% 34%;   /* #5C554F Taupe-Brown */
+    --card: 0 0% 100% / 0.6;   /* Semi-transparent for glass effect */
+    --card-foreground: 26 8% 34%;
+    --popover: 0 0% 100% / 0.8;
+    --popover-foreground: 26 8% 34%;
+    --primary: 26 8% 34%;      /* #5C554F Taupe-Brown */
+    --primary-foreground: 40 11% 94%;
+    --secondary: 40 5% 85% / 0.5;
+    --secondary-foreground: 26 8% 34%;
+    --muted: 40 5% 90% / 0.4;
+    --muted-foreground: 26 5% 45%;
+    --accent: 343 62% 81%;     /* #ECB3C4 Rose-Pink */
+    --accent-foreground: 343 62% 20%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 26 8% 85% / 0.3;
+    --input: 26 8% 85% / 0.3;
+    --ring: 26 8% 34%;
+    --radius: 1.5rem;
+  }
+
+  .dark {
+    --background: 240 10% 7%;    /* Gris oscuro profundo (Zinc/Charcoal) */
+    --foreground: 0 0% 98%;       /* Blanco roto */
+    --card: 240 10% 12% / 0.6;    /* Cristal oscuro */
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 12% / 0.8;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 95%;          /* Elementos principales casi blancos */
+    --primary-foreground: 240 10% 7%;
+    --secondary: 240 10% 20% / 0.5;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 240 10% 15% / 0.4;
+    --muted-foreground: 240 5% 65%;
+    --accent: 343 62% 81%;        /* Mantenemos el Rose-Pink de la marca */
+    --accent-foreground: 240 10% 7%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 240 10% 20% / 0.3;
+    --input: 240 10% 20% / 0.3;
+    --ring: 343 62% 81%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground font-body transition-colors duration-500 overflow-x-hidden;
+    background-image: 
+      radial-gradient(at 0% 0%, hsla(343, 62%, 81%, 0.1) 0px, transparent 50%),
+      radial-gradient(at 100% 0%, hsla(26, 8%, 34%, 0.05) 0px, transparent 50%);
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-headline;
+  }
+}
+
+@layer components {
+  .liquid-glass {
+    @apply bg-white/40 dark:bg-black/40 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-xl;
+  }
+
+  .glass-button {
+    @apply bg-white/60 dark:bg-white/10 backdrop-blur-md border border-white/30 dark:border-white/10 hover:bg-white/80 dark:hover:bg-white/20 transition-all duration-300;
+  }
+
+  .product-card-hover {
+    @apply transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 bg-white/40 dark:bg-white/5 backdrop-blur-md border border-white/20 dark:border-white/10;
+  }
+
+  .glass-nav {
+    @apply bg-white/40 dark:bg-black/60 backdrop-blur-2xl border-b border-white/20 dark:border-white/10 sticky top-0 z-50;
+  }
+
+  /* Ocultar scrollbar pero mantener funcionalidad */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Custom scrollbar for liquid feel */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/20 backdrop-blur-md rounded-full hover:bg-primary/30 transition-colors;
+}

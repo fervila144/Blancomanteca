@@ -1,0 +1,145 @@
+'use client';
+
+import React, { DependencyList, createContext, useContext, ReactNode, useMemo, useState, useEffect } from 'react';
+import { FirebaseApp } from 'firebase/app';
+import { Firestore } from 'firebase/firestore';
+import { Auth, User, onAuthStateChanged } from 'firebase/auth';
+import { FirebaseErrorListener } from '@/components/firebase-error-listener';
+
+interface FirebaseProviderProps {
+  children: ReactNode;
+  firebaseApp?: FirebaseApp | null;
+  firestore?: Firestore | null;
+  auth?: Auth | null;
+}
+
+interface UserAuthState {
+  user: User | null;
+  isUserLoading: boolean;
+  userError: Error | null;
+}
+
+export interface FirebaseContextState {
+  areServicesAvailable: boolean;
+  firebaseApp: FirebaseApp | null;
+  firestore: Firestore | null;
+  auth: Auth | null;
+  user: User | null;
+  isUserLoading: boolean;
+  userError: Error | null;
+}
+
+export interface FirebaseServicesAndUser {
+  firebaseApp: FirebaseApp | null;
+  firestore: Firestore | null;
+  auth: Auth | null;
+  user: User | null;
+  isUserLoading: boolean;
+  userError: Error | null;
+}
+
+export interface UserHookResult { 
+  user: User | null;
+  isUserLoading: boolean;
+  userError: Error | null;
+}
+
+export const FirebaseContext = createContext<FirebaseContextState | undefined>(undefined);
+
+export const FirebaseProvider: React.FC<FirebaseProviderProps> = ({
+  children,
+  firebaseApp,
+  firestore,
+  auth,
+}) => {
+  const [userAuthState, setUserAuthState] = useState<UserAuthState>({
+    user: null,
+    isUserLoading: true,
+    userError: null,
+  });
+
+  useEffect(() => {
+    if (!auth) {
+      // Si no hay auth disponible (SSR o error inicial), dejamos de cargar
+      if (typeof window !== 'undefined') {
+        setUserAuthState(prev => ({ ...prev, isUserLoading: false }));
+      }
+      return;
+    }
+
+    const unsubscribe = onAuthStateChanged(
+      auth,
+      (firebaseUser) => {
+        setUserAuthState({ user: firebaseUser, isUserLoading: false, userError: null });
+      },
+      (error) => {
+        setUserAuthState({ user: null, isUserLoading: false, userError: error });
+      }
+    );
+    return () => unsubscribe();
+  }, [auth]);
+
+  const contextValue = useMemo((): FirebaseContextState => {
+    return {
+      areServicesAvailable: !!(firebaseApp && firestore && auth),
+      firebaseApp: firebaseApp || null,
+      firestore: firestore || null,
+      auth: auth || null,
+      user: userAuthState.user,
+      isUserLoading: userAuthState.isUserLoading,
+      userError: userAuthState.userError,
+    };
+  }, [firebaseApp, firestore, auth, userAuthState]);
+
+  return (
+    <FirebaseContext.Provider value={contextValue}>
+      <FirebaseErrorListener />
+      {children}
+    </FirebaseContext.Provider>
+  );
+};
+
+export const useFirebase = (): FirebaseServicesAndUser => {
+  const context = useContext(FirebaseContext);
+  return {
+    firebaseApp: context?.firebaseApp || null,
+    firestore: context?.firestore || null,
+    auth: context?.auth || null,
+    user: context?.user || null,
+    isUserLoading: context?.isUserLoading ?? true,
+    userError: context?.userError || null,
+  };
+};
+
+export const useAuth = (): Auth | null => {
+  const context = useContext(FirebaseContext);
+  return context?.auth || null;
+};
+
+export const useFirestore = (): Firestore | null => {
+  const context = useContext(FirebaseContext);
+  return context?.firestore || null;
+};
+
+export const useFirebaseApp = (): FirebaseApp | null => {
+  const context = useContext(FirebaseContext);
+  return context?.firebaseApp || null;
+};
+
+type MemoFirebase <T> = T & {__memo?: boolean};
+
+export function useMemoFirebase<T>(factory: () => T, deps: DependencyList): T | (MemoFirebase<T>) {
+  const memoized = useMemo(factory, deps);
+  if(typeof memoized !== 'object' || memoized === null) return memoized;
+  (memoized as MemoFirebase<T>).__memo = true;
+  return memoized;
+}
+
+export const useUser = (): UserHookResult => { 
+  const context = useContext(FirebaseContext);
+  return { 
+    user: context?.user || null, 
+    isUserLoading: context?.isUserLoading ?? true, 
+    userError: context?.userError || null 
+  };
+};

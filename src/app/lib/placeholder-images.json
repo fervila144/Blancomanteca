@@ -1,0 +1,47 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "hero-interior",
+      "description": "Sophisticated home interior with muted tones",
+      "imageUrl": "https://picsum.photos/seed/market1/1200/600",
+      "imageHint": "minimalist interior"
+    },
+    {
+      "id": "product-ceramic-vase",
+      "description": "Minimalist ceramic vase on a wooden table",
+      "imageUrl": "https://picsum.photos/seed/vase/600/800",
+      "imageHint": "ceramic vase"
+    },
+    {
+      "id": "product-linen-cushion",
+      "description": "Soft linen cushion in taupe color",
+      "imageUrl": "https://picsum.photos/seed/linen/600/800",
+      "imageHint": "linen cushion"
+    },
+    {
+      "id": "product-scented-candle",
+      "description": "Handcrafted soy wax candle in glass jar",
+      "imageUrl": "https://picsum.photos/seed/candle/600/800",
+      "imageHint": "scented candle"
+    },
+    {
+      "id": "product-wooden-bowl",
+      "description": "Hand-carved oak serving bowl",
+      "imageUrl": "https://picsum.photos/seed/bowl/600/800",
+      "imageHint": "wooden bowl"
+    },
+    {
+      "id": "product-cotton-throw",
+      "description": "Woven cotton throw blanket with fringe",
+      "imageUrl": "https://picsum.photos/seed/throw/600/800",
+      "imageHint": "cotton blanket"
+    },
+    {
+      "id": "product-glass-carafe",
+      "description": "Elegant glass water carafe with matching glass",
+      "imageUrl": "https://picsum.photos/seed/glass/600/800",
+      "imageHint": "glass carafe"
+    }
+  ]
+}

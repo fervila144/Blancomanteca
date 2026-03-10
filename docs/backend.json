@@ -1,0 +1,110 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Perfil de usuario extendido con datos de sesión y seguridad.",
+      "properties": {
+        "id": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "username": { "type": "string" },
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "address": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "stocker", "user"] },
+        "status": { "type": "string", "enum": ["active", "banned"] },
+        "lastSeen": { "type": "string", "format": "date-time" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "email", "role"]
+    },
+    "SiteSettings": {
+      "title": "SiteSettings",
+      "type": "object",
+      "description": "Configuración global del sitio.",
+      "properties": {
+        "maintenanceMode": { "type": "boolean" },
+        "logoUrl": { "type": "string" },
+        "faviconUrl": { "type": "string" },
+        "welcomeTitle": { "type": "string" },
+        "welcomeDescription": { "type": "string" },
+        "shippingInfo": { "type": "string" }
+      }
+    },
+    "Banner": {
+      "title": "Banner",
+      "type": "object",
+      "description": "Imagen promocional para el carrusel principal.",
+      "properties": {
+        "id": { "type": "string" },
+        "imageUrl": { "type": "string" },
+        "title": { "type": "string" },
+        "description": { "type": "string" },
+        "link": { "type": "string", "description": "URL de redirección al hacer clic." },
+        "createdAt": { "type": "string", "format": "date-time" }
+      }
+    },
+    "Stocker": {
+      "title": "Stocker",
+      "type": "object",
+      "description": "Lista blanca de personal con acceso al panel de stock.",
+      "properties": {
+        "email": { "type": "string" },
+        "active": { "type": "boolean" }
+      }
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "type": "object",
+      "description": "Anuncios emergentes para los usuarios.",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "active": { "type": "boolean" }
+      }
+    },
+    "PurchaseRequest": {
+      "title": "PurchaseRequest",
+      "type": "object",
+      "description": "Petición de compra realizada por un usuario.",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userPhone": { "type": "string" },
+        "productId": { "type": "string" },
+        "status": { "type": "string", "enum": ["pending", "completed", "cancelled"] }
+      }
+    },
+    "Review": {
+      "title": "Review",
+      "type": "object",
+      "description": "Reseña de un producto dejada por un usuario.",
+      "properties": {
+        "id": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "number", "minimum": 1, "maximum": 5 },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["userId", "rating", "comment", "createdAt"]
+    }
+  },
+  "auth": {
+    "providers": ["password", "google"]
+  },
+  "firestore": {
+    "structure": [
+      { "path": "/users/{userId}", "definition": { "schema": { "$ref": "#/backend/entities/UserProfile" } } },
+      { "path": "/settings/site", "definition": { "schema": { "$ref": "#/backend/entities/SiteSettings" } } },
+      { "path": "/stockers/{email}", "definition": { "schema": { "$ref": "#/backend/entities/Stocker" } } },
+      { "path": "/announcements/{id}", "definition": { "schema": { "$ref": "#/backend/entities/Announcement" } } },
+      { "path": "/purchase_requests/{id}", "definition": { "schema": { "$ref": "#/backend/entities/PurchaseRequest" } } },
+      { "path": "/products/{productId}/reviews/{reviewId}", "definition": { "schema": { "$ref": "#/backend/entities/Review" } } },
+      { "path": "/banners/{bannerId}", "definition": { "schema": { "$ref": "#/backend/entities/Banner" } } }
+    ]
+  }
+}

@@ -1,0 +1,59 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Funciones base simplificadas
+    function isSuperAdmin() {
+      return request.auth != null && request.auth.uid == "joRzb55ya0PQqrdMOHnWyi33EAN2";
+    }
+
+    // --- REGLAS POR COLECCIÓN ---
+
+    match /users/{userId} {
+      // Un usuario siempre tiene acceso total a su nodo y subcolecciones (favoritos, etc)
+      allow read, write: if (request.auth != null && request.auth.uid == userId) || isSuperAdmin();
+      
+      match /{allSubcollections=**} {
+        allow read, write: if (request.auth != null && request.auth.uid == userId) || isSuperAdmin();
+      }
+    }
+
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+      
+      match /reviews/{reviewId} {
+        allow read: if true;
+        allow create: if request.auth != null;
+        allow update, delete: if isSuperAdmin() || (request.auth != null && resource.data.userId == request.auth.uid);
+      }
+    }
+
+    match /announcements/{id} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    match /banners/{id} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    match /purchase_requests/{id} {
+      allow create: if request.auth != null;
+      allow read, update, delete: if isSuperAdmin();
+    }
+
+    match /settings/{id} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+
+    // Fallback de seguridad global
+    match /{document=**} {
+      allow read: if true;
+      allow write: if isSuperAdmin();
+    }
+  }
+}
